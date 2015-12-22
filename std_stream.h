@@ -16,6 +16,13 @@ typedef platform_uint8 uint8;
 #define true (0)
 #endif
 
+typedef enum 
+{
+    STD_STREAM_STATE_IDLE   = 0,
+    STD_STREAM_STATE_OPENED ,
+    STD_STREAM_STATE_CLOSED ,
+    STD_STREAM_STATE_INVALID
+} StdStreamState;
 
 /**
  * @brief StdStream Interface
@@ -26,13 +33,13 @@ typedef struct
      * @brief Init something necessary. 
      * @retrun true or false. 
      */
-    bool    (*open)     (void); 
+    bool (*open)(void); 
 
     /**
      * @brief Indicates if read and write can be called. 
-     * @retrun true or false. 
+     * @retrun the state of stream. 
      */
-    bool    (*ready)    (void);
+    StdStreamState (*state)(void);
 
     /**
      * @brief Write data to stream. 
@@ -42,14 +49,14 @@ typedef struct
      * @retval others - return with error. 
      * @warning the content of buf MUST NOT be changed in this call. 
      */
-    int32   (*write)    (const uint8 *buf, int32 len); 
+    int32 (*write)(const uint8 *buf, int32 len); 
 
     /**
      * @brief Get the number of data unread in stream. 
      * @retval not less than 0 - the number of data unread in stream. 
      * @retval others - return with error. 
      */
-    int32   (*available)(void);    
+    int32 (*available)(void);    
 
     /**
      * @brief Read data to buffer from stream. 
@@ -58,12 +65,12 @@ typedef struct
      * @retval not less than 0 - the number of bytes read actually. 
      * @retval others - return with error(the content of buf is unexpectable in this case). 
      */
-    int32   (*read)     (uint8 *buf, int32 len); 
+    int32 (*read)(uint8 *buf, int32 len); 
 
     /**
      * Deinit things necessary. 
      */
-    void    (*close)    (void); 
+    void (*close)(void); 
 } StdStream;
 
 
