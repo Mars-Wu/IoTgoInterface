@@ -18,10 +18,10 @@ typedef platform_uint8 uint8;
 
 typedef enum 
 {
-    STD_STREAM_STATE_IDLE   = 0,
-    STD_STREAM_STATE_OPENED ,
-    STD_STREAM_STATE_CLOSED ,
-    STD_STREAM_STATE_INVALID
+    STD_STREAM_STATE_READY      = 1,    /**< Closed and can be open */
+    STD_STREAM_STATE_BUSY       = 2,    /**< Opened and busy(write/read can NOT be called) */
+    STD_STREAM_STATE_IDLE       = 3,    /**< Opened and idle(write/read can be called) */
+    STD_STREAM_STATE_INVALID    = 100   /**< Error occurs */
 } StdStreamState;
 
 /**
@@ -30,16 +30,16 @@ typedef enum
 typedef struct 
 {
     /**
-     * @brief Init something necessary. 
-     * @retrun true or false. 
-     */
-    bool (*open)(void); 
-
-    /**
      * @brief Indicates if read and write can be called. 
      * @retrun the state of stream. 
      */
     StdStreamState (*state)(void);
+
+    /**
+     * @brief Init something necessary. 
+     * @retrun true or false. 
+     */
+    bool (*open)(void); 
 
     /**
      * @brief Write data to stream. 
