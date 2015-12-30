@@ -1,3 +1,5 @@
+#ifndef __STD_STREAM_H__
+#define __STD_STREAM_H__
 
 typedef signed int int32;
 typedef unsigned int uint32;
@@ -45,3 +47,4 @@ int32 ssWrite(const StdStream *obj, const uint8 *buf, int32 len);
 int32 ssAvailable(const StdStream *obj);
 int32 ssRead(const StdStream *obj, uint8 *buf, int32 len); 
 
+#endif /* #ifndef __STD_STREAM_H__ */

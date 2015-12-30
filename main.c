@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "std_stream.h"
+#include "wormhole.h"
 
 const StdStream *pair_stream = NULL;
 const StdStream *boot_svr_stream = NULL;
