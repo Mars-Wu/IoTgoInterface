@@ -1,20 +1,7 @@
-/**
- * @file std_stream.h
- * @brief The definition of StdStream Interface. 
- */
 
-typedef platform_bool bool;
-typedef platform_int32 int32;
-typedef platform_uint32 uint32;
-typedef platform_uint8 uint8;
-
-#ifndef false
-#define false (1)
-#endif
-
-#ifndef true
-#define true (0)
-#endif
+typedef signed int int32;
+typedef unsigned int uint32;
+typedef unsigned char uint8;
 
 typedef enum 
 {
@@ -24,83 +11,39 @@ typedef enum
     STD_STREAM_STATE_INVALID    = 100   /**< Error occurs */
 } StdStreamState;
 
-/**
- * @brief StdStream Interface
- */
+typedef enum 
+{
+    STD_STREAM_TYPE_CLIENT      = 1, 
+    STD_STREAM_TYPE_SERVER      = 2,
+    STD_STREAM_TYPE_P2P         = 3,
+    STD_STREAM_TYPE_INVALID     = 100,
+} StdStreamType;
+
+typedef enum 
+{
+    STD_STREAM_ERROR_NONE       = 0,
+    
+} StdStreamError;
+
 typedef struct 
 {
-    /**
-     * @brief Indicates if read and write can be called. 
-     * @retrun the state of stream. 
-     */
-    StdStreamState (*state)(void);
-
-    /**
-     * @brief Init something necessary. 
-     * @retrun true or false. 
-     */
-    bool (*open)(void); 
-
-    /**
-     * @brief Write data to stream. 
-     * @param buf - the started pointer of data to write. 
-     * @param len - the length of data. 
-     * @retval not less than 0 - the number of bytes written successuffly. 
-     * @retval others - return with error. 
-     * @warning the content of buf MUST NOT be changed in this call. 
-     */
-    int32 (*write)(const uint8 *buf, int32 len); 
-
-    /**
-     * @brief Get the number of data unread in stream. 
-     * @retval not less than 0 - the number of data unread in stream. 
-     * @retval others - return with error. 
-     */
-    int32 (*available)(void);    
-
-    /**
-     * @brief Read data to buffer from stream. 
-     * @param buf - the started pointer for saving data. 
-     * @param len - the length to read. 
-     * @retval not less than 0 - the number of bytes read actually. 
-     * @retval others - return with error(the content of buf is unexpectable in this case). 
-     */
-    int32 (*read)(uint8 *buf, int32 len); 
-
-    /**
-     * Deinit things necessary. 
-     */
-    void (*close)(void); 
-} StdStream;
+    StdStreamType type;
+    uint32 ip;
+    uint32 port;
+} StdStreamParam;
 
 
-/**
- * @brief Get the single object of Pair Stream. 
- * @return the pointer for success, NULL for failure. 
- */
-const StdStream * strmGetPairStream(void);
+struct StdStream;
+typedef struct StdStream StdStream;
 
-/**
- * @brief Get the single object of Bootstrap Server Stream. 
- * @param ip - the ip address of target host. 
- * @param port - the port of target host. 
- * @return the pointer for success, NULL for failure. 
- */
-const StdStream * strmGetBootSvrStream(uint32 ip, uint32 port);
-
-/**
- * @brief Get the single object of Operation Server Stream. 
- * @param ip - the ip address of target host. 
- * @param port - the port of target host.  
- * @return the pointer for success, NULL for failure. 
- */
-const StdStream * strmGetOprSvrStream(uint32 ip, uint32 port);
-
-/**
- * @brief Get the single object of OTA Server Stream. 
- * @param ip - the ip address of target host. 
- * @param port - the port of target host. 
- * @return the pointer for success, NULL for failure. 
- */
-const StdStream * strmGetOtaSvrStream(uint32 ip, uint32 port);
+const StdStream * ssCreateStdStream(void);
+void ssReleaseStdStream(const StdStream *obj);
+StdStreamError ssSetParam(const StdStream *obj, StdStreamParam param);
+StdStreamParam ssGetParam(const StdStream *obj);
+StdStreamState ssGetState(const StdStream *obj);
+StdStreamError ssOpen(const StdStream *obj); 
+StdStreamError ssClose(const StdStream *obj); 
+int32 ssWrite(const StdStream *obj, const uint8 *buf, int32 len); 
+int32 ssAvailable(const StdStream *obj);
+int32 ssRead(const StdStream *obj, uint8 *buf, int32 len); 
 
