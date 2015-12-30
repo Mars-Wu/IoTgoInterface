@@ -32,8 +32,6 @@ typedef struct
     uint32 port;
 } StdStreamParam;
 
-
-struct StdStream;
 typedef struct StdStream StdStream;
 
 const StdStream * ssCreateStdStream(void);
